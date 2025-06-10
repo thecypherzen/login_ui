@@ -1,5 +1,5 @@
 const ProgressBar = () => {
-  return <div className="h-2px bg-neutral-200"></div>;
+  return <div className="h-[3px] bg-neutral-200"></div>;
 };
 
 export default ProgressBar;
