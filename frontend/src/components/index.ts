@@ -1,5 +1,6 @@
-import AppLayout from "@/components/AppLayout";
-import Navbar from "@/components/Navbar";
-import ProgressBar from "@/components/ProgressBar";
+import AppLayout from "./AppLayout";
+import ContentWrapper from "./ContentWrapper";
+import Navbar from "./Navbar";
+import ProgressBar from "./ProgressBar";
 
-export { AppLayout, Navbar, ProgressBar };
+export { AppLayout, ContentWrapper, Navbar, ProgressBar };
