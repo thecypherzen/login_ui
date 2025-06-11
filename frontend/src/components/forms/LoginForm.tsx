@@ -35,6 +35,10 @@ const formSchema = z.object({
 const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   const generatedForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
   const formOnSubmit = (values: z.infer<typeof formSchema>) => {
