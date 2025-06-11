@@ -65,14 +65,14 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             label="Password"
           />
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-y-4 items-center justify-between md:flex-row text-sm lg:text-base">
           <Button className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-neutral-500 dark:text-neutral-900 w-full md:w-auto">
             Submit
           </Button>
-          <p className="text-neutral-500">
-            Don't have an account?{"  "}
+          <p className="text-neutral-500 flex flex-col gap-y-1 text-center md:flex-row md:text-left">
+            Don't have an account?&nbsp;
             <Link
-              className="text-neutral-900 font-semibold hover:cursor-pointer hover:underline dark:text-neutral-200"
+              className="text-neutral-900 font-semibold hover:cursor-pointer hover:underline active:underline dark:text-neutral-200"
               to="#"
             >
               Sign up
@@ -98,7 +98,10 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
               placeholder={props.placeholder}
               {...field}
               type={props.inputType}
-              className={cn("py-5 md:py-6", props.inputClassName)}
+              className={cn(
+                "py-5 md:py-6 dark:text-neutral-200",
+                props.inputClassName,
+              )}
             />
           </FormControl>
           <FormMessage />
