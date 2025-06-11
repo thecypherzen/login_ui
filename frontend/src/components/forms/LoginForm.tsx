@@ -16,6 +16,7 @@ import type {
   FieldPath,
 } from "@react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 
 // form schema
@@ -53,7 +54,6 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             inputType="email"
             control={generatedForm.control}
             label="Username"
-            inputClassName="py-6"
           />
         </div>
         <div>
@@ -63,10 +63,22 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             inputType="password"
             control={generatedForm.control}
             label="Password"
-            inputClassName="py-6"
           />
         </div>
-        <Button className="cursor-pointer">Submit</Button>
+        <div className="flex items-center justify-between">
+          <Button className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-neutral-500 dark:text-neutral-900 w-full md:w-auto">
+            Submit
+          </Button>
+          <p className="text-neutral-500">
+            Don't have an account?{"  "}
+            <Link
+              className="text-neutral-900 font-semibold hover:cursor-pointer hover:underline dark:text-neutral-200"
+              to="#"
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
       </form>
     </Form>
   );
@@ -86,7 +98,7 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
               placeholder={props.placeholder}
               {...field}
               type={props.inputType}
-              className={props.inputClassName}
+              className={cn("py-5 md:py-6", props.inputClassName)}
             />
           </FormControl>
           <FormMessage />

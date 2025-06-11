@@ -12,16 +12,16 @@ const AppNavBar = () => {
 
   return (
     <div
-      className="p-1 bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100"
+      className="p-1 sticky z-20 bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:shadow-neutral-900"
       onClick={toggleTheme}
       data-theme={theme}
     >
-      <ContentWrapper className="flex justify-center items-center">
+      <ContentWrapper className="flex felx-col justify-center items-center">
         <div className="cursor-pointer rounded-sm p-2">
           <Button
             asChild
             size="icon"
-            className="p-1 duration-500 transition-all dark:hover:text-neutral-700"
+            className="p-1 duration-500 transition-all hover:text-neutral-500 dark:hover:text-neutral-700"
             variant="ghost"
           >
             {theme === "light" ? <SunMedium /> : <Moon />}
