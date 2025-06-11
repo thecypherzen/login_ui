@@ -10,11 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type {
-  Control,
-  ControllerRenderProps,
-  FieldPath,
-} from "@react-hook-form";
+import type { Control, FieldPath } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils";
@@ -94,10 +90,9 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
 const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
   return (
     <FormField
-      className={props.className}
       name={props.name}
       control={props.control}
-      render={({ field }: { field: ControllerRenderProps }) => (
+      render={({ field }) => (
         <FormItem>
           <FormLabel>{props.label}</FormLabel>
           <FormControl>
@@ -130,7 +125,6 @@ type LoginFormFieldPropsType = {
   placeholder?: string;
   description?: string;
   label?: string;
-  className?: string;
   inputClassName?: string;
 };
 
