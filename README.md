@@ -10,4 +10,4 @@ A simple login UI demo for a client
 - [x] Postgres
 
 # Live Preview
-You can preview the application [here](login-ui-demo.vercel.app)
+You can preview the application [here](https://login-ui-demo.vercel.app/)
