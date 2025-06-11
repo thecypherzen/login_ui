@@ -74,15 +74,15 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         </div>
         <div className="flex flex-col gap-y-4 items-center justify-between md:flex-row text-sm lg:text-base">
           <Button className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-neutral-500 dark:text-neutral-900 w-full md:w-auto">
-            Submit
+            Create Account
           </Button>
           <p className="text-neutral-500 flex flex-col gap-y-1 text-center md:flex-row md:text-left">
-            Don't have an account?&nbsp;
+            Already have an account?&nbsp;
             <Link
               className="text-neutral-900 font-semibold hover:cursor-pointer hover:underline active:underline dark:text-neutral-200"
-              to="/auth/signup"
+              to="/"
             >
-              Sign up
+              Login
             </Link>
           </p>
         </div>
