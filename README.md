@@ -2,9 +2,12 @@
 A simple login UI demo for a client
 
 # Stack
-[-] React
-[-] Typescript
-[-] Vite
-[-] Prisma
-[-] Express
-[-] Postgres
+- [x] React
+- [x] Typescript
+- [x] Vite
+- [x] Prisma
+- [x] Express
+- [x] Postgres
+
+# Live Preview
+You can preview the application [here](login-ui-demo.vercel.app)
