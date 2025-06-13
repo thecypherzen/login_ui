@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { loginController } from "./controllers";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -51,7 +51,7 @@ const keepAlive = () => {
     .then((res) => {
       console.log(
         "Server alive check",
-        res.data.status,
+        res.data.message,
         "at",
         new Date().toLocaleString("en-GB"),
       );
