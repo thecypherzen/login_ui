@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { passLib } from "./utils";
 import db from "./dbClient";
 
 const loginController = async (req: Request, res: Response) => {
@@ -12,6 +13,7 @@ const loginController = async (req: Request, res: Response) => {
     return;
   }
   try {
+    const passwdHash = await passLib.generate(password);
     const user = await db.client.user.findUnique({
       where: {
         username: username,
@@ -21,10 +23,16 @@ const loginController = async (req: Request, res: Response) => {
       res.status(404).json({ code: 1, message: "User not found" });
       return;
     }
-    console.log("user:", user);
+    // verify password matches
+    if (user.password != passwdHash) {
+      res.status(400).json({
+        code: 4,
+        message: "Unauthorised. Wrong password",
+      });
+      return;
+    }
     res.json({ code: 0, ...user });
   } catch (err: Error | any) {
-    console.log("error", err);
     res.status(500).json({
       code: 3,
       message: err?.message ?? "some error occured",
