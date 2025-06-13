@@ -41,6 +41,7 @@ const formSchema = z.object({
 // Form component
 const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const generatedForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,8 +72,11 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
       );
       console.log(res);
       hideLoader();
-    } catch (err) {
+    } catch (err: Error | any) {
       console.error(err);
+      if (err.status === 404) {
+        setUserNotFound(true);
+      }
       hideLoader();
     }
   };
@@ -81,13 +85,6 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
     // do nothing
   }, [isLoading]);
 
-  if (isLoading) {
-    return (
-      <div className="absolute top-0 left-0 flex items-center justify-center h-[100svh] w-[100vw] bg-neutral-300 dark:bg-neutral-800">
-        <Spinner />
-      </div>
-    );
-  }
   return (
     <Form {...generatedForm}>
       <form
@@ -101,6 +98,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             inputType="email"
             control={generatedForm.control}
             label="Username"
+            inputDisabled={isLoading || userNotFound}
           />
         </div>
         <div>
@@ -110,10 +108,27 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             inputType="password"
             control={generatedForm.control}
             label="Password"
+            inputDisabled={isLoading || userNotFound}
           />
         </div>
+        {userNotFound && (
+          <div className="animate-all duration-500">
+            <p className="text-sm px-1 text-destructive">
+              User account does not exist. Click&nbsp;
+              <strong>Sign up</strong>&nbsp; to register.
+            </p>
+          </div>
+        )}
         <div className="flex flex-col gap-y-4 items-center justify-between md:flex-row text-sm lg:text-base">
-          <Button className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-neutral-500 dark:text-neutral-900 w-full md:w-auto">
+          <Button
+            disabled={userNotFound}
+            className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-neutral-500 dark:text-neutral-900 w-full md:w-auto"
+          >
+            {isLoading && (
+              <span className="space-x-2">
+                <Spinner />
+              </span>
+            )}{" "}
             Submit
           </Button>
           <p className="text-neutral-500 flex flex-col gap-y-1 text-center md:flex-row md:text-left">
@@ -141,6 +156,7 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
           <FormLabel>{props.label}</FormLabel>
           <FormControl>
             <Input
+              disabled={props.inputDisabled}
               placeholder={props.placeholder}
               {...field}
               type={props.inputType}
@@ -170,6 +186,7 @@ type LoginFormFieldPropsType = {
   description?: string;
   label?: string;
   inputClassName?: string;
+  inputDisabled?: boolean;
 };
 
 export default LoginForm;
