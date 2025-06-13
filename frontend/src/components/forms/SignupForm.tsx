@@ -101,7 +101,7 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
               {...field}
               type={props.inputType}
               className={cn(
-                "py-5 md:py-6 dark:text-neutral-200",
+                "py-5 md:py-6 dark:text-neutral-200 bg-white",
                 props.inputClassName,
               )}
             />
