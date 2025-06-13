@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,7 +14,14 @@ import { Input } from "@/components/ui/input";
 import type { Control, FieldPath } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import { Spinner } from "@/components/index";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+
+const apiUrl =
+  import.meta.env.VITE_NODE_ENV === "dev"
+    ? `http://${import.meta.env.VITE_API_DEV_HOST}:${import.meta.env.VITE_API_DEV_PORT}`
+    : import.meta.env.VITE_API_LIVE_URL;
 
 // form schema
 const formSchema = z.object({
@@ -32,6 +40,7 @@ const formSchema = z.object({
 
 // Form component
 const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const generatedForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,10 +49,40 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
     },
   });
 
-  const formOnSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const hideLoader = () => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
 
+  const formOnSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get(apiUrl, {
+        headers: {
+          "Content-Type": "Application/json",
+        },
+        data: { ...values },
+      });
+      console.log(res);
+      hideLoader();
+    } catch (err) {
+      console.error(err);
+      hideLoader();
+    }
+  };
+
+  useEffect(() => {
+    // do nothing
+  }, [isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="absolute top-0 left-0 flex items-center justify-center h-[100svh] w-[100vw] bg-neutral-300 dark:bg-neutral-800">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <Form {...generatedForm}>
       <form
