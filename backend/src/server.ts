@@ -1,8 +1,10 @@
 import express, { Request, Response } from "express";
+import { loginController } from "./controllers";
 import axios from "axios";
 import dotenv from "dotenv";
-import db from "./dbClient.js";
+import cors from "cors";
 
+// init
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8082;
 const HOST = process.env.HOST || "0.0.0.0";
@@ -14,17 +16,21 @@ if (!dotenv.config()) {
   console.log("ENV VARS LOADED SUCCESSFULLY");
 }
 
+// config
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(
+  cors({
+    origin: [process.env.DEV_CLIENT_URL as string],
+  }),
+);
 
 // routes
 app.get("/api/v1/status", async (_: Request, res: Response) => {
   res.json({ message: "OK" });
 });
 
-app.get("/api/v1/auth/status", async (_: Request, res: Response) => {
-  res.json({ dbIsReady: db.isReady });
-});
+app.post("/api/v1/auth/login", loginController);
 
 // 404 handlers
 app.all(/\/*/, async (_: Request, res: Response) => {
@@ -47,8 +53,9 @@ const keepAlive = () => {
         "Server alive check",
         res.data.status,
         "at",
-        Date.now().toLocaleString("en-GB"),
+        new Date().toLocaleString("en-GB"),
       );
+      console.log(res.data);
     })
     .catch((err) => {
       console.log(err?.message ?? "error");
