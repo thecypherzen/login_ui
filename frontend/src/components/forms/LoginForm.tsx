@@ -18,10 +18,10 @@ import { Spinner } from "@/components/index";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 
-const apiUrl =
+const apiBaseUrl =
   import.meta.env.VITE_NODE_ENV === "dev"
-    ? `http://${import.meta.env.VITE_API_DEV_HOST}:${import.meta.env.VITE_API_DEV_PORT}`
-    : import.meta.env.VITE_API_LIVE_URL;
+    ? `${import.meta.env.VITE_API_DEV_BASE_URL}`
+    : import.meta.env.VITE_API_LIVE_BASE_URL;
 
 // form schema
 const formSchema = z.object({
@@ -58,12 +58,17 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   const formOnSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const res = await axios.get(apiUrl, {
-        headers: {
-          "Content-Type": "Application/json",
+      const res = await axios.post(
+        `${apiBaseUrl}/auth/login`,
+        {
+          ...values,
         },
-        data: { ...values },
-      });
+        {
+          headers: {
+            "Content-Type": "Application/json",
+          },
+        },
+      );
       console.log(res);
       hideLoader();
     } catch (err) {
