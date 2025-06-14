@@ -1,5 +1,5 @@
 {
-  "name": "balancee-backend",
+  "name": "login_ui",
   "version": "1.0.0",
   "description": "simple backend server",
   "main": "dist/server.js",

@@ -145,8 +145,14 @@ const loginController = async (req: Request, res: Response) => {
       id: user.id,
       username: user.username,
     });
-    cookiesLib.set(res, authToken);
-    res.json({ code: 0, user });
+    cookiesLib.set(res, { name: "authToken", value: authToken });
+    cookiesLib.set(res, {
+      name: "isLoggedIn",
+      value: "true",
+      extras: { httpOnly: false },
+    });
+    const filteredUser = await db.filterModel(user);
+    res.json({ code: 0, user: filteredUser });
   } catch (err: Error | any) {
     res.status(500).json({
       code: 3,

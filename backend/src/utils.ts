@@ -71,21 +71,29 @@ const tokenLib = {
   },
 };
 
+const cookieOptions = {
+  general: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "prod",
+    path: "/",
+  },
+  maxAge: 60 * 60 * 7 * 1000,
+};
+
 const cookiesLib = {
-  set: (res: Response, value: string) => {
-    res.cookie("authToken", value, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 7 * 1000,
-      secure: process.env.NODE_ENV === "prod",
-      path: "/api/v1",
+  set: (res: Response, options: SetCookieOptionsType) => {
+    res.cookie(options.name, options.value, {
+      ...cookieOptions.general,
+      maxAge: cookieOptions.maxAge,
+      ...options.extras,
     });
     return;
   },
-  clear: (res: Response) => {
-    res.clearCookie("authToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "prod",
-      path: "/api/v1",
+
+  clear: (res: Response, options: ClearCookieOptionsType) => {
+    res.clearCookie(options.name, {
+      ...cookieOptions.general,
+      ...options.extras,
     });
   },
 };
@@ -94,6 +102,15 @@ const cookiesLib = {
 type TokenPayloadType = {
   id: string;
   username: string;
+};
+
+type ClearCookieOptionsType = {
+  name: string;
+  extras?: { httpOnly: boolean; [key: string]: any };
+};
+
+type SetCookieOptionsType = ClearCookieOptionsType & {
+  value: string;
 };
 
 export { cookiesLib, passLib, tokenLib };
