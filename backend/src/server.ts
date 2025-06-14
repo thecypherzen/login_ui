@@ -1,3 +1,7 @@
+/**
+ * API Entry point
+ * Defines all routes and exposes endpoints. It's a simple server, so it's best this way.
+ */
 import express, { Request, Response } from "express";
 import { loginController, signupController } from "./controllers";
 import axios from "axios";

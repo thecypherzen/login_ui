@@ -1,12 +1,15 @@
+/**
+ * controllers - a module that creates and exposes various controllers for the backend.
+ * - They are:
+ * - signUpController - for signup sequence
+ * - loginController - for login sequence
+ * - logoutController - for logout sequence
+ */
 import { Request, Response } from "express";
 import { passLib } from "./utils";
 import { Prisma } from "@prisma/client";
 import db from "./dbClient";
 
-type CredentialsType = {
-  username: string | undefined;
-  password: string | undefined;
-};
 
 const signupController = async (req: Request, res: Response) => {
   console.log("signup endpoint called with:\n", req.body);
@@ -54,6 +57,7 @@ const signupController = async (req: Request, res: Response) => {
       user,
     });
   } catch (err: Error | any) {
+    // handle error
     console.log(err);
     res.status(500).json({
       code: 3,
@@ -102,5 +106,13 @@ const loginController = async (req: Request, res: Response) => {
     });
   }
 };
+
+// TYPE DEFINITIONS
+// Credentials
+type CredentialsType = {
+  username: string | undefined;
+  password: string | undefined;
+};
+
 
 export { loginController, signupController };

@@ -1,3 +1,8 @@
+/**
+ * DbClient - Database management class
+ * - Typically connects to db orm client and defines useful methods useful at top level
+ * - Initialises and exposes instance of self
+ */
 import { exec } from "child_process";
 import { PrismaClient } from "@prisma/client";
 
