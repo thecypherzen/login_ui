@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import Home from "@/pages/Home";
-import SignupPage from "@/pages/SignupPage";
+import { Dashboard, HomePage, SignupPage } from "@/pages/index";
 import AppLayout from "@/components/AppLayout";
 
 function App() {
@@ -8,8 +7,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AppLayout />}>
-          <Route index element={<Home />} />
+          <Route index element={<HomePage />} />
           <Route path="auth/signup" element={<SignupPage />} />
+          <Route path="/user/me/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>
