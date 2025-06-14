@@ -71,7 +71,7 @@ const tokenLib = {
   },
 };
 
-const cookies = {
+const cookiesLib = {
   set: (res: Response, value: string) => {
     res.cookie("authToken", value, {
       httpOnly: true,
@@ -81,6 +81,13 @@ const cookies = {
     });
     return;
   },
+  clear: (res: Response) => {
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "prod",
+      path: "/api/v1",
+    });
+  },
 };
 
 // types
@@ -89,4 +96,4 @@ type TokenPayloadType = {
   username: string;
 };
 
-export { cookies, passLib, tokenLib };
+export { cookiesLib, passLib, tokenLib };
