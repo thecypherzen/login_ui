@@ -16,7 +16,7 @@ const signupController = async (req: Request, res: Response) => {
   if (!username || !password) {
     res.status(400).json({
       code: 2,
-      message: `Unauthorised! Missing ${!username && !password ? "username and password" : !username ? "username" : "password"}`,
+      message: `Missing ${!username && !password ? "username and password" : !username ? "username" : "password"}`,
     });
     return;
   }
@@ -29,7 +29,7 @@ const signupController = async (req: Request, res: Response) => {
     if (existingUser) {
       res.status(400).json({
         code: 5,
-        message: `Unauthorised!. Username ${username} already in use`,
+        message: `Username ${username} already in use`,
       });
       return;
     }
@@ -69,13 +69,12 @@ const loginController = async (req: Request, res: Response) => {
   if (!username || !password) {
     res.status(400).json({
       code: 2,
-      message: `Unauthorised!. Missing ${!username && !password ? "username and password" : !username ? "username" : "password"}`,
+      message: `Missing ${!username && !password ? "username and password" : !username ? "username" : "password"}`,
     });
     return;
   }
 
   try {
-    const passwdHash = await passLib.generate(password);
     const user = await db.client.user.findUnique({
       where: {
         username: username,
@@ -86,10 +85,11 @@ const loginController = async (req: Request, res: Response) => {
       return;
     }
     // verify password matches
-    if (user.password != passwdHash) {
+    const passwdsMatch = await passLib.verify(user.password, password);
+    if (!passwdsMatch) {
       res.status(400).json({
         code: 4,
-        message: "Unauthorised. Wrong password",
+        message: "Wrong password",
       });
       return;
     }
