@@ -1,5 +1,5 @@
-import express, { Request, Response, NextFunction } from "express";
-import { loginController } from "./controllers";
+import express, { Request, Response } from "express";
+import { loginController, signupController } from "./controllers";
 import axios from "axios";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -31,12 +31,13 @@ app.get("/api/v1/status", async (_: Request, res: Response) => {
 });
 
 app.post("/api/v1/auth/login", loginController);
+app.post("/api/v1/auth/signup", signupController);
 
 // 404 handlers
 app.all(/\/*/, async (_: Request, res: Response) => {
   res.status(404).json({
     code: 1,
-    message: "Not Found",
+    message: "Requested resouce does not exist",
   });
 });
 
