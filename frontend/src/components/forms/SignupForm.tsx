@@ -79,9 +79,9 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
           },
         },
       );
-      console.log(res);
       setMessage({
         type: "success",
+        title: "success",
         message: "Account created. Taking you to login page",
       });
       setTimeout(() => {
@@ -91,7 +91,6 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         }, 1500);
       }, delay);
     } catch (err: Error | any) {
-      console.error(err);
       setMessage({
         type: "error",
         title: "unauthorised",

@@ -103,6 +103,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
       }
       setMessage({
         type: "error",
+        title: "unauthorised",
         message:
           err?.status === 404
             ? "User account not found"
@@ -158,7 +159,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
                     : "text-neutral-300 dark:text-neutral-200",
               )}
             >
-              <span className="font-bold">{`${capitalCase(message.type)}: `}</span>{" "}
+              <span className="font-bold">{`${capitalCase(message.title)}: `}</span>{" "}
               {message.message}
               {userNotFound && (
                 <span>
