@@ -1,3 +1,6 @@
+/**
+ * User dashboard component
+ */
 const Dashboard = () => {
   return (
     <div className="min-h-[100svh] flex justify-center p-6 bg-neutral-100 dark:bg-neutral-800">

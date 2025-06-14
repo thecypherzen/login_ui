@@ -1,3 +1,6 @@
+/**
+ * Login form component for login page
+ */
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +45,7 @@ const formSchema = z.object({
 
 // Form component
 const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
+  // state variables
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<FormMessageType | undefined>(
@@ -57,22 +61,27 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
     },
   });
   const delay = 2000;
+
+  // hide spinner controller
   const hideSpinner = () => {
     setTimeout(() => {
       setIsLoading(false);
     }, delay);
   };
 
+  // clear ui error handler
   const clearMessage = () => {
     setShowMessage(false);
     setMessage(undefined);
     setUserNotFound(false);
   };
 
+  // form onsubmit handler
   const formOnSubmit = async (values: z.infer<typeof formSchema>) => {
     clearMessage();
     setIsLoading(true);
     try {
+      // request to api
       const res = await axios.post(
         `${apiBaseUrl}/auth/login`,
         {
@@ -84,12 +93,13 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
           },
         },
       );
-      console.log(res);
+      // set success message
       setMessage({
         type: "success",
         title: "login successful",
         message: "Taking you in...",
       });
+      // display message and redirect to dashboard on success
       setTimeout(() => {
         setShowMessage(true);
         setTimeout(() => {
@@ -97,10 +107,10 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         }, delay / 1.5);
       }, delay);
     } catch (err: Error | any) {
-      console.error(err);
       if (err?.status === 404) {
         setUserNotFound(true);
       }
+      // set error message and display error message on failure
       setMessage({
         type: "error",
         title: "unauthorised",
@@ -113,12 +123,13 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         setShowMessage(true);
       }, delay);
     } finally {
+      // hide spinner
       hideSpinner();
     }
   };
 
   useEffect(() => {
-    // do nothing
+    // track loading state
   }, [isLoading]);
 
   return (
@@ -197,6 +208,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   );
 };
 
+// form field definition
 const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
   return (
     <FormField
@@ -225,10 +237,12 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
 };
 
 // Types
+// form props type
 type LoginFormPropsType = {
   className?: string;
 };
 
+// form field type
 type LoginFormFieldPropsType = {
   name: FieldPath<z.infer<typeof formSchema>>;
   control: Control<z.infer<typeof formSchema>, any>;

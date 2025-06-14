@@ -1,3 +1,7 @@
+/**
+ * Main Application Component
+ * Defines routes and connects pages
+ */
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Dashboard, HomePage, SignupPage } from "@/pages/index";
 import AppLayout from "@/components/AppLayout";

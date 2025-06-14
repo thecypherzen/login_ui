@@ -1,3 +1,5 @@
+/** Entry point for components module */
+
 import AppLayout from "./AppLayout";
 import ContentWrapper from "./ContentWrapper";
 import Navbar from "./Navbar";

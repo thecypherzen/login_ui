@@ -1,3 +1,6 @@
+/**
+ * Spinner - App isloading spinner
+ */
 const Spinner = () => {
   return (
     <div role="status">

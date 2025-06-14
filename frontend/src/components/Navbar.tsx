@@ -1,3 +1,6 @@
+/**
+ * Navbar: App's main nav component
+ */
 import { ContentWrapper } from "@/components/index";
 import { SunMedium, Moon } from "lucide-react";
 import { UseTheme } from "@/hooks/ThemeProvider";

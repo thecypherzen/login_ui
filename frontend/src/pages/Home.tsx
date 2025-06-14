@@ -1,3 +1,6 @@
+/**
+ * Home component - renders Login form
+ */
 import LoginForm from "@/components/forms/LoginForm";
 import { UseTheme } from "@/hooks/ThemeProvider";
 

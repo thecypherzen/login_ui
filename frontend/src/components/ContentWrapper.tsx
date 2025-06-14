@@ -1,3 +1,6 @@
+/**
+ * ContentWrapper: a container to wrap component content
+ */
 import { cn } from "@/lib/utils";
 
 const ContentWrapper: React.FC<{

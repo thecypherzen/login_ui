@@ -1,3 +1,6 @@
+/**
+ * Signup page
+ */
 import SignupForm from "@/components/forms/SignupForm";
 import { UseTheme } from "@/hooks/ThemeProvider";
 
