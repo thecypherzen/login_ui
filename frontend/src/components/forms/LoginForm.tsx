@@ -66,6 +66,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   const clearMessage = () => {
     setShowMessage(false);
     setMessage(undefined);
+    setUserNotFound(false);
   };
 
   const formOnSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -93,19 +94,19 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
       }, delay);
     } catch (err: Error | any) {
       console.error(err);
-      if (err.status === 404) {
+      if (err?.status === 404) {
         setUserNotFound(true);
-        setMessage({
-          type: "error",
-          message:
-            err?.status === 404
-              ? "User account not found"
-              : (err?.response?.message ?? err?.message),
-        });
-        setTimeout(() => {
-          setShowMessage(true);
-        }, delay);
       }
+      setMessage({
+        type: "error",
+        message:
+          err?.status === 404
+            ? "User account not found"
+            : (err?.response?.data?.message ?? err?.message),
+      });
+      setTimeout(() => {
+        setShowMessage(true);
+      }, delay);
     } finally {
       hideSpinner();
     }
@@ -151,7 +152,8 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
                   : "text-neutral-300 dark:text-neutral-200",
               )}
             >
-              {`${capitalCase(message.type)}: ${message.message}`}
+              <span className="font-bold">{`${capitalCase(message.type)}: `}</span>{" "}
+              {message.message}
               {userNotFound && (
                 <span>
                   .&nbsp;Click&nbsp;
