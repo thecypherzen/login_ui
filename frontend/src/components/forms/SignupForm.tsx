@@ -94,6 +94,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
       console.error(err);
       setMessage({
         type: "error",
+        title: "unauthorised",
         message: `${err?.response?.data?.message ?? "Sign up failed for some reason"}.`,
       });
       setTimeout(() => {
@@ -142,7 +143,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
                     : "text-neutral-300 dark:text-neutral-200",
               )}
             >
-              <strong>{capitalCase(message.type)}:&nbsp;</strong>
+              <strong>{capitalCase(message.title)}:&nbsp;</strong>
               {message.message}
             </p>
           </div>
@@ -216,6 +217,7 @@ type LoginFormFieldPropsType = {
 
 type FormMessageType = {
   type: "success" | "error" | "warning" | "neutral";
+  title: string;
   message: string;
 };
 

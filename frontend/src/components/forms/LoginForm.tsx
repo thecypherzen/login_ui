@@ -85,7 +85,11 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         },
       );
       console.log(res);
-      setMessage({ type: "success", message: "Taking you in..." });
+      setMessage({
+        type: "success",
+        title: "login successful",
+        message: "Taking you in...",
+      });
       setTimeout(() => {
         setShowMessage(true);
         setTimeout(() => {
@@ -146,10 +150,12 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
           <div className="animate-all duration-500">
             <p
               className={cn(
-                "text-sm px-1 text-green-500",
+                "text-sm px-1",
                 message.type === "error"
                   ? "text-destructive"
-                  : "text-neutral-300 dark:text-neutral-200",
+                  : message.type === "success"
+                    ? "text-green-500"
+                    : "text-neutral-300 dark:text-neutral-200",
               )}
             >
               <span className="font-bold">{`${capitalCase(message.type)}: `}</span>{" "}
