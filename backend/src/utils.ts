@@ -7,6 +7,7 @@
  */
 import { argon2id, hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
+import { Response } from "express";
 
 // password library
 const passLib = {
@@ -70,10 +71,22 @@ const tokenLib = {
   },
 };
 
+const cookies = {
+  set: (res: Response, value: string) => {
+    res.cookie("authToken", value, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 7 * 1000,
+      secure: process.env.NODE_ENV === "prod",
+      path: "/api/v1",
+    });
+    return;
+  },
+};
+
 // types
 type TokenPayloadType = {
   id: string;
   username: string;
 };
 
-export { passLib, tokenLib };
+export { cookies, passLib, tokenLib };
