@@ -7,6 +7,7 @@ import { loginController, signupController } from "./controllers";
 import axios from "axios";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 // init
 const app = express();
@@ -28,6 +29,7 @@ app.use(
     origin: [process.env.DEV_CLIENT_URL as string],
   }),
 );
+app.use(cookieParser());
 
 // routes
 app.get("/api/v1/status", async (_: Request, res: Response) => {

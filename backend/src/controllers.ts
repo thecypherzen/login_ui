@@ -6,10 +6,9 @@
  * - logoutController - for logout sequence
  */
 import { Request, Response } from "express";
-import { passLib } from "./utils";
+import { cookiesLib, passLib, tokenLib } from "./utils";
 import { Prisma } from "@prisma/client";
 import db from "./dbClient";
-
 
 const signupController = async (req: Request, res: Response) => {
   console.log("signup endpoint called with:\n", req.body);
@@ -54,7 +53,7 @@ const signupController = async (req: Request, res: Response) => {
     const user = await db.client.user.create({ data });
     res.json({
       code: 0,
-      user,
+      id: user.id,
     });
   } catch (err: Error | any) {
     // handle error
@@ -69,7 +68,50 @@ const signupController = async (req: Request, res: Response) => {
 
 // login controller
 const loginController = async (req: Request, res: Response) => {
+  // login with token
+  const { authToken } = req.cookies;
+  if (authToken) {
+    try {
+      // handle expired token
+      const { payload, expired } = await tokenLib.decompose(authToken);
+      if (expired) {
+        res.status(400).json({
+          code: 5,
+          message: "Auth token expired",
+        });
+        return;
+      }
+      // fetch user from db and handle 404
+      const user = await db.client.user.findUnique({
+        where: { id: payload?.id, username: payload?.username },
+      });
+      if (!user) {
+        res.status(404).json({
+          code: 1,
+          message: "User not found",
+        });
+        return;
+      }
+      // filter user model fields
+      const filteredUser = await db.filterModel({ ...user, authToken });
+      res.json({
+        code: 0,
+        user: filteredUser,
+      });
+    } catch (err: Error | any) {
+      // handle error
+      res.status(500).json({
+        code: 3,
+        message: err?.message ?? "Some error occured",
+        details: JSON.stringify(err),
+      });
+      return;
+    }
+  }
+
+  // login with credentials
   const { username, password } = req.body;
+  // handle missing values
   if (!username || !password) {
     res.status(400).json({
       code: 2,
@@ -79,6 +121,7 @@ const loginController = async (req: Request, res: Response) => {
   }
 
   try {
+    // get user from db
     const user = await db.client.user.findUnique({
       where: {
         username: username,
@@ -97,11 +140,17 @@ const loginController = async (req: Request, res: Response) => {
       });
       return;
     }
-    res.json({ code: 0, ...user });
+    // generate auth token, set cookie and return
+    const authToken = await tokenLib.generate({
+      id: user.id,
+      username: user.username,
+    });
+    cookiesLib.set(res, authToken);
+    res.json({ code: 0, user });
   } catch (err: Error | any) {
     res.status(500).json({
       code: 3,
-      message: err?.message ?? "some error occured",
+      message: err?.message ?? "Some error occured",
       details: JSON.stringify(err),
     });
   }
@@ -113,6 +162,5 @@ type CredentialsType = {
   username: string | undefined;
   password: string | undefined;
 };
-
 
 export { loginController, signupController };
