@@ -6,6 +6,7 @@
  *    - uses argon2id
  */
 import { argon2id, hash, verify } from "argon2";
+import jwt from "jsonwebtoken";
 
 // password library
 const passLib = {
@@ -34,4 +35,45 @@ const passLib = {
   },
 };
 
-export { passLib };
+const tokenLib = {
+  // generate token from payload
+  generate: async (
+    payload: TokenPayloadType,
+    options: object = {
+      expiresIn: "7d",
+    },
+  ): Promise<string> => {
+    const secret = process.env.AUTH_SECRET;
+    if (!secret) {
+      throw new Error("Auth token generation failed");
+    }
+    return jwt.sign(payload, secret, options);
+  },
+
+  // extract payload from auth token
+  decompose: async (
+    token: string,
+  ): Promise<{ payload: TokenPayloadType | null; expired: boolean }> => {
+    const secret = process.env.AUTH_SECRET;
+    if (!secret) {
+      throw new Error("Auth token validation failed");
+    }
+    try {
+      const payload = jwt.verify(token, secret) as TokenPayloadType;
+      return { payload, expired: false };
+    } catch (err) {
+      if (err instanceof jwt.TokenExpiredError) {
+        return { payload: null, expired: true };
+      }
+      throw err;
+    }
+  },
+};
+
+// types
+type TokenPayloadType = {
+  id: string;
+  username: string;
+};
+
+export { passLib, tokenLib };
