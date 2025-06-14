@@ -13,10 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import type { Control, FieldPath } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Spinner } from "@/components/index";
 import { cn } from "@/lib/utils";
+import { capitalCase } from "change-case";
 import axios from "axios";
+import type { FormMessageType } from "@/components/forms/SignupForm";
 
 const apiBaseUrl =
   import.meta.env.VITE_NODE_ENV === "dev"
@@ -41,7 +43,12 @@ const formSchema = z.object({
 // Form component
 const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [message, setMessage] = useState<FormMessageType | undefined>(
+    undefined,
+  );
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
+  const navigate = useNavigate();
   const generatedForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,14 +56,20 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
       password: "",
     },
   });
-
-  const hideLoader = () => {
+  const delay = 2000;
+  const hideSpinner = () => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, delay);
+  };
+
+  const clearMessage = () => {
+    setShowMessage(false);
+    setMessage(undefined);
   };
 
   const formOnSubmit = async (values: z.infer<typeof formSchema>) => {
+    clearMessage();
     setIsLoading(true);
     try {
       const res = await axios.post(
@@ -71,13 +84,30 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         },
       );
       console.log(res);
-      hideLoader();
+      setMessage({ type: "success", message: "Taking you in..." });
+      setTimeout(() => {
+        setShowMessage(true);
+        setTimeout(() => {
+          navigate("/user/me/dashboard");
+        }, delay / 1.5);
+      }, delay);
     } catch (err: Error | any) {
       console.error(err);
       if (err.status === 404) {
         setUserNotFound(true);
+        setMessage({
+          type: "error",
+          message:
+            err?.status === 404
+              ? "User account not found"
+              : (err?.response?.message ?? err?.message),
+        });
+        setTimeout(() => {
+          setShowMessage(true);
+        }, delay);
       }
-      hideLoader();
+    } finally {
+      hideSpinner();
     }
   };
 
@@ -98,7 +128,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             inputType="email"
             control={generatedForm.control}
             label="Username"
-            inputDisabled={isLoading || userNotFound}
+            inputDisabled={isLoading}
           />
         </div>
         <div>
@@ -108,20 +138,32 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             inputType="password"
             control={generatedForm.control}
             label="Password"
-            inputDisabled={isLoading || userNotFound}
+            inputDisabled={isLoading}
           />
         </div>
-        {userNotFound && (
+        {showMessage && message && (
           <div className="animate-all duration-500">
-            <p className="text-sm px-1 text-destructive">
-              User account does not exist. Click&nbsp;
-              <strong>Sign up</strong>&nbsp; to register.
+            <p
+              className={cn(
+                "text-sm px-1 text-green-500",
+                message.type === "error"
+                  ? "text-destructive"
+                  : "text-neutral-300 dark:text-neutral-200",
+              )}
+            >
+              {`${capitalCase(message.type)}: ${message.message}`}
+              {userNotFound && (
+                <span>
+                  .&nbsp;Click&nbsp;
+                  <strong>Sign up</strong>&nbsp; to register.
+                </span>
+              )}
             </p>
           </div>
         )}
         <div className="flex flex-col gap-y-4 items-center justify-between md:flex-row text-sm lg:text-base">
           <Button
-            disabled={userNotFound}
+            disabled={isLoading}
             className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-neutral-500 dark:text-neutral-900 w-full md:w-auto"
           >
             {isLoading && (
