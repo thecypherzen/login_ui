@@ -168,6 +168,53 @@ const loginController = async (req: Request, res: Response) => {
   }
 };
 
+// logout controller
+const logoutController = async (req: Request, res: Response) => {
+  // login with token
+  const { authToken } = req.cookies;
+  if (!authToken) {
+    res.status(400).json({
+      code: 5,
+      message: "Auth token expired",
+    });
+    return;
+  }
+  try {
+    // handle expired token
+    const { payload, expired } = await tokenLib.decompose(authToken);
+    if (expired) {
+      res.status(400).json({
+        code: 5,
+        message: "Auth token expired",
+      });
+      return;
+    }
+    // fetch user from db and handle 404
+    const user = await db.client.user.findUnique({
+      where: { id: payload?.id, username: payload?.username },
+    });
+    if (!user) {
+      res.status(404).json({
+        code: 1,
+        message: "User not found",
+      });
+      return;
+    }
+    cookiesLib.clear(res, { name: "AuthToken" });
+    cookiesLib.clear(res, { name: "isLoggedIn", extras: { httpOnly: false } });
+    res.status(200).end();
+    return;
+  } catch (err: Error | any) {
+    // handle error
+    res.status(500).json({
+      code: 3,
+      message: err?.message ?? "Some error occured",
+      details: JSON.stringify(err),
+    });
+    return;
+  }
+};
+
 // TYPE DEFINITIONS
 // Credentials
 type CredentialsType = {
@@ -175,4 +222,4 @@ type CredentialsType = {
   password: string | undefined;
 };
 
-export { loginController, signupController };
+export { loginController, logoutController, signupController };

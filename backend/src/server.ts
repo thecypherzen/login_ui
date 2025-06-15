@@ -3,7 +3,11 @@
  * Defines all routes and exposes endpoints. It's a simple server, so it's best this way.
  */
 import express, { Request, Response } from "express";
-import { loginController, signupController } from "./controllers";
+import {
+  loginController,
+  logoutController,
+  signupController,
+} from "./controllers";
 import axios from "axios";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -41,6 +45,7 @@ app.get("/api/v1/status", async (_: Request, res: Response) => {
 });
 
 app.post("/api/v1/auth/login", loginController);
+app.post("/api/v1/auth/logut", logoutController);
 app.post("/api/v1/auth/signup", signupController);
 
 // 404 handlers
