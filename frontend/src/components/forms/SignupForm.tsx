@@ -66,7 +66,6 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
   const clearMessage = () => {
     setShowMessage(false);
     setMessage(undefined);
-    s;
   };
 
   // form submit handler
@@ -86,6 +85,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         },
       );
       // set message based on response
@@ -156,7 +156,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
                     : "text-neutral-300 dark:text-neutral-200",
               )}
             >
-              <strong>{capitalCase(message.title)}:&nbsp;</strong>
+              {message.title && <strong>{capitalCase(message.title)}:&nbsp;</strong>}
               {message.message}
             </p>
           </div>
@@ -234,7 +234,7 @@ type LoginFormFieldPropsType = {
 // form ui message
 type FormMessageType = {
   type: "success" | "error" | "warning" | "neutral";
-  title: string;
+  title?: string;
   message: string;
 };
 
