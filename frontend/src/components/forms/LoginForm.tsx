@@ -18,9 +18,9 @@ import type { Control, FieldPath } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
 import { Spinner } from "@/components/index";
-import { cn } from "@/lib/utils";
+import { api, cache, cn } from "@/lib/utils";
 import { capitalCase } from "change-case";
-import axios from "axios";
+import cookies from "js-cookie";
 import type { FormMessageType } from "@/components/forms/SignupForm";
 
 const apiBaseUrl =
@@ -82,23 +82,15 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
     setIsLoading(true);
     try {
       // request to api
-      const res = await axios.post(
-        `${apiBaseUrl}/auth/login`,
-        {
-          ...values,
-        },
-        {
-          headers: {
-            "Content-Type": "Application/json",
-          },
-        },
-      );
+      const res = await api.post(`${apiBaseUrl}/auth/login`, { ...values });
       // set success message
       setMessage({
         type: "success",
         title: "login successful",
         message: "Taking you in...",
       });
+      cache.saveData(res?.data?.user);
+      cookies.set("isLoggedIn", "true");
       // display message and redirect to dashboard on success
       setTimeout(() => {
         setShowMessage(true);
@@ -170,7 +162,11 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
                     : "text-neutral-300 dark:text-neutral-200",
               )}
             >
-              <span className="font-bold">{`${capitalCase(message.title)}: `}</span>{" "}
+              {message.title && (
+                <span className="font-bold">
+                  {`${capitalCase(message.title)}: `}&nbsp;
+                </span>
+              )}
               {message.message}
               {userNotFound && (
                 <span>
