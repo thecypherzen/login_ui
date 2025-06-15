@@ -185,7 +185,7 @@ const logoutController = async (req: Request, res: Response) => {
     if (expired) {
       res.status(400).json({
         code: 5,
-        message: "Auth token expired",
+        message: "Auth token expired or not logged in",
       });
       return;
     }
@@ -200,7 +200,7 @@ const logoutController = async (req: Request, res: Response) => {
       });
       return;
     }
-    cookiesLib.clear(res, { name: "AuthToken" });
+    cookiesLib.clear(res, { name: "authToken" });
     cookiesLib.clear(res, { name: "isLoggedIn", extras: { httpOnly: false } });
     res.status(200).end();
     return;

@@ -45,7 +45,7 @@ app.get("/api/v1/status", async (_: Request, res: Response) => {
 });
 
 app.post("/api/v1/auth/login", loginController);
-app.post("/api/v1/auth/logut", logoutController);
+app.post("/api/v1/auth/logout", logoutController);
 app.post("/api/v1/auth/signup", signupController);
 
 // 404 handlers
