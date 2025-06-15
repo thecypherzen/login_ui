@@ -78,7 +78,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         : import.meta.env.VITE_API_LIVE_BASE_URL;
     try {
       // request to api
-      const res = await axios.post(
+      await axios.post(
         `${baseUrl}/auth/signup`,
         { ...values },
         {
