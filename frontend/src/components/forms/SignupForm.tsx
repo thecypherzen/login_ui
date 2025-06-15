@@ -156,7 +156,9 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
                     : "text-neutral-300 dark:text-neutral-200",
               )}
             >
-              {message.title && <strong>{capitalCase(message.title)}:&nbsp;</strong>}
+              {message.title && (
+                <strong>{capitalCase(message.title)}:&nbsp;</strong>
+              )}
               {message.message}
             </p>
           </div>

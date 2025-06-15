@@ -24,15 +24,17 @@ const LogoutPage = () => {
         ? `${import.meta.env.VITE_API_DEV_BASE_URL}`
         : import.meta.env.VITE_API_LIVE_BASE_URL;
     try {
-      const res = await api.post(`${apiBaseUrl}/auth/logout`, {});
-      console.log(res);
+      await api.post(`${apiBaseUrl}/auth/logout`, {});
       // clear data
       cache.clear();
       setIsLoading(false);
-      setLogoutSuccess(false);
+      setLogoutSuccess(true);
       Cookies.remove("authToken");
       Cookies.remove("isLogedIn");
       setMessage({ type: "success", message: "Logout Successful" });
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (err: Error | any) {
       setIsLoading(false);
       setLogoutSuccess(false);
@@ -40,7 +42,7 @@ const LogoutPage = () => {
         type: "error",
         message:
           err?.response?.data?.code === 5
-            ? "Your're not loggen in "
+            ? "Sorry. You're not logged in"
             : (err?.message ?? "Logout failed"),
       });
     }
@@ -50,10 +52,10 @@ const LogoutPage = () => {
   }, []);
   return (
     <div
-      className="min-h-[calc(100svh-62px)] dark:bg-neutral-800 dark:text-neutral-100 flex flex-col items-center py-50"
+      className="min-h-[calc(100svh-62px)] dark:bg-neutral-800 dark:text-neutral-100 grid grid-rows-3 p-6"
       data-theme={theme}
     >
-      <div className="flex flex-col items-center gap-5 font-semibold">
+      <div className="row-span-2 flex flex-col justify-center items-center gap-5 font-semibold">
         <p
           className={cn(
             "",
@@ -84,7 +86,7 @@ const LogoutPage = () => {
             </span>
           )}
         </div>
-        {!logoutSuccess && (
+        {!logoutSuccess && !isLoading && (
           <Button
             className="cursor-pointer dark:bg-neutral-200 dark:hover:bg-white dark:text-neutral-900 font-semibold mt-5"
             size="lg"

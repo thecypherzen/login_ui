@@ -95,7 +95,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
       setTimeout(() => {
         setShowMessage(true);
         setTimeout(() => {
-          navigate("/user/me/dashboard");
+          navigate(`/user/${res.data.user.id}/dashboard`);
         }, delay / 1.5);
       }, delay);
     } catch (err: Error | any) {
