@@ -57,7 +57,7 @@ class Database {
         }
       } else if (!this.#hiddenFields.includes(key)) {
         // allow only allowed fields
-        filtered[key] = key;
+        filtered[key] = value;
       }
     }
     return filtered;
