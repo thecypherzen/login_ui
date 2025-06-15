@@ -11,7 +11,6 @@ import { Prisma } from "@prisma/client";
 import db from "./dbClient";
 
 const signupController = async (req: Request, res: Response) => {
-  console.log("signup endpoint called with:\n", req.body);
   const { username, password }: CredentialsType = req.body;
 
   // handle missing credentials
@@ -57,7 +56,6 @@ const signupController = async (req: Request, res: Response) => {
     });
   } catch (err: Error | any) {
     // handle error
-    console.log(err);
     res.status(500).json({
       code: 3,
       message: err?.message ?? "Some error occured",
@@ -98,6 +96,7 @@ const loginController = async (req: Request, res: Response) => {
         code: 0,
         user: filteredUser,
       });
+      return;
     } catch (err: Error | any) {
       // handle error
       res.status(500).json({
@@ -108,14 +107,21 @@ const loginController = async (req: Request, res: Response) => {
       return;
     }
   }
-
   // login with credentials
   const { username, password } = req.body;
+
   // handle missing values
+  if (!username && !password) {
+    res.status(400).json({
+      code: 5,
+      message: "Auth token expired",
+    });
+    return;
+  }
   if (!username || !password) {
     res.status(400).json({
       code: 2,
-      message: `Missing ${!username && !password ? "username and password" : !username ? "username" : "password"}`,
+      message: `Missing ${!username ? "username" : "password"}`,
     });
     return;
   }
