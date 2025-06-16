@@ -20,7 +20,6 @@ import { Link, useNavigate } from "react-router";
 import { Spinner } from "@/components/index";
 import { api, cache, cn } from "@/lib/utils";
 import { capitalCase } from "change-case";
-import cookies from "js-cookie";
 import type { FormMessageType } from "@/components/forms/SignupForm";
 
 const apiBaseUrl =
@@ -90,7 +89,6 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
         message: "Taking you in...",
       });
       cache.saveData(res?.data?.user);
-      cookies.set("isLoggedIn", "true");
       // display message and redirect to dashboard on success
       setTimeout(() => {
         setShowMessage(true);
@@ -138,6 +136,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             control={generatedForm.control}
             label="Username"
             inputDisabled={isLoading}
+            autoComplete="username"
           />
         </div>
         <div>
@@ -148,6 +147,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             control={generatedForm.control}
             label="Password"
             inputDisabled={isLoading}
+            autoComplete="current-password"
           />
         </div>
         {showMessage && message && (
@@ -223,6 +223,7 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
                 "py-5 md:py-6 dark:text-neutral-200 bg-white",
                 props.inputClassName,
               )}
+              autoComplete={props.autoComplete}
             />
           </FormControl>
           <FormMessage />
@@ -248,6 +249,7 @@ type LoginFormFieldPropsType = {
   label?: string;
   inputClassName?: string;
   inputDisabled?: boolean;
+  autoComplete?: string;
 };
 
 export default LoginForm;

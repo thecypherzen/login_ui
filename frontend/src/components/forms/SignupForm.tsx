@@ -132,6 +132,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             control={generatedForm.control}
             label="Username"
             disabled={isLoading}
+            autoComplete="email"
           />
         </div>
         <div>
@@ -142,6 +143,7 @@ const LoginForm: React.FC<LoginFormPropsType> = ({ className }) => {
             control={generatedForm.control}
             label="Password"
             disabled={isLoading}
+            autoComplete="new-password"
           />
         </div>
         {showMessage && message && (
@@ -206,6 +208,7 @@ const LoginFormField: React.FC<LoginFormFieldPropsType> = ({ ...props }) => {
                 "py-5 md:py-6 dark:text-neutral-200 bg-white",
                 props.inputClassName,
               )}
+              autoComplete={props.autoComplete}
             />
           </FormControl>
           <FormMessage />
@@ -231,6 +234,7 @@ type LoginFormFieldPropsType = {
   label?: string;
   inputClassName?: string;
   disabled?: boolean;
+  autoComplete?: string;
 };
 
 // form ui message

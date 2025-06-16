@@ -50,7 +50,7 @@ const Home = () => {
       }, 1500);
     } catch (err: Error | any) {
       cookies.remove("authToken");
-      cookies.set("isLoggedIn", "false");
+      cookies.remove("isLoggedIn");
       cache.clear();
       setIsLoading(false);
       setMessage({
