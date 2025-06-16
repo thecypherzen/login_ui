@@ -19,7 +19,8 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8082;
 const HOST = process.env.HOST || "0.0.0.0";
 
 // load env variables
-if (!dotenv.config()) {
+const vars = dotenv.config();
+if (!vars) {
   console.error("ENV VARS FAILED TO LOAD");
 } else {
   console.log("ENV VARS LOADED SUCCESSFULLY");
@@ -43,7 +44,6 @@ app.use(cookieParser());
 app.get("/api/v1/status", async (_: Request, res: Response) => {
   res.json({ message: "OK" });
 });
-
 app.post("/api/v1/auth/login", loginController);
 app.post("/api/v1/auth/logout", logoutController);
 app.post("/api/v1/auth/signup", signupController);
