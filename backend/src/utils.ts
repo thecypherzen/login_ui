@@ -7,7 +7,7 @@
  */
 import { argon2id, hash, verify } from "argon2";
 import jwt from "jsonwebtoken";
-import { Response } from "express";
+import { CookieOptions, Response } from "express";
 
 // password library
 const passLib = {
@@ -75,8 +75,9 @@ const cookieOptions = {
   general: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "prod",
+    sameSite: process.env.NODE_ENV === "prod" ? "none" : "lax",
     path: "/",
-  },
+  } as CookieOptions,
   maxAge: 60 * 60 * 7 * 1000,
 };
 
