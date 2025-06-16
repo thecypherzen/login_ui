@@ -61,7 +61,7 @@ const keepAlive = () => {
   const url =
     process.env.NODE_ENV === "dev"
       ? `http://${HOST}:${PORT}/api/v1/status`
-      : "https://live-server";
+      : `${process.env.LIVE_API_URL}`;
   axios
     .get(url)
     .then((res) => {
