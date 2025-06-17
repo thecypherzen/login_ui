@@ -2,7 +2,7 @@
  * API Entry point
  * Defines all routes and exposes endpoints. It's a simple server, so it's best this way.
  */
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import {
   loginController,
   logoutController,
@@ -26,7 +26,13 @@ if (!vars) {
   console.log("ENV VARS LOADED SUCCESSFULLY");
 }
 
+const setResHeaders = (res: Response): void => {
+  res.setHeader("Cache-control", "no-cache, max-age=0");
+  res.setHeader("Pragma", "no-cache");
+};
+
 // config
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(
@@ -44,9 +50,30 @@ app.use(cookieParser());
 app.get("/api/v1/status", async (_: Request, res: Response) => {
   res.json({ message: "OK" });
 });
-app.post("/api/v1/auth/login", loginController);
-app.post("/api/v1/auth/logout", logoutController);
-app.post("/api/v1/auth/signup", signupController);
+app.post(
+  "/api/v1/auth/login",
+  (_: Request, res: Response, next: NextFunction) => {
+    setResHeaders(res);
+    next();
+  },
+  loginController,
+);
+app.post(
+  "/api/v1/auth/logout",
+  (_: Request, res: Response, next: NextFunction) => {
+    setResHeaders(res);
+    next();
+  },
+  logoutController,
+);
+app.post(
+  "/api/v1/auth/signup",
+  (_: Request, res: Response, next: NextFunction) => {
+    setResHeaders(res);
+    next();
+  },
+  signupController,
+);
 
 // 404 handlers
 app.all(/\/*/, async (_: Request, res: Response) => {
