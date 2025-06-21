@@ -70,7 +70,6 @@ const loginController = async (req: Request, res: Response) => {
   const { authToken } = req.cookies;
   if (authToken) {
     try {
-      console.log("LOGGING IN WITH TOKEN", authToken);
       // handle expired token
       const { payload, expired } = await tokenLib.decompose(authToken);
       if (expired) {
@@ -110,7 +109,6 @@ const loginController = async (req: Request, res: Response) => {
   }
   // login with credentials
   const { username, password } = req.body;
-  console.log("LOGGING IN WITH CREDENTIALS...", username, password);
   // handle missing values
   if (!username && !password) {
     res.status(400).json({
