@@ -19,7 +19,7 @@ const apiBaseUrl =
 const Home = () => {
   const { theme } = UseTheme();
   const [userLoggedIn, setUserLoggedIn] = useState<boolean>(
-    cookies.get("isLoggedIn") === "true",
+    JSON.parse(window.localStorage.getItem("login_ui_data") as string) !== null,
   );
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const [message, setMessage] = useState<FormMessageType>({
@@ -31,7 +31,6 @@ const Home = () => {
     undefined,
   );
   const navigate = useNavigate();
-
   // auto login handler
   const autoLogin = async () => {
     setIsLoading(true);
@@ -50,7 +49,6 @@ const Home = () => {
       }, 1500);
     } catch (err: Error | any) {
       cookies.remove("authToken");
-      cookies.remove("isLoggedIn");
       cache.clear();
       setIsLoading(false);
       setMessage({

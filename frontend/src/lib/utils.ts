@@ -29,21 +29,24 @@ const api = {
 };
 
 const cache = {
-  saveData: async (data: Record<string, any>) => {
-    window.localStorage.setItem("login_ui_data", JSON.stringify(data));
+  saveData: async (
+    data: Record<string, any>,
+    key: string = "login_ui_data",
+  ) => {
+    window.localStorage.setItem(key, JSON.stringify(data));
     return true;
   },
 
-  getData: async () => {
-    const data = window.localStorage.getItem("login_ui_data");
+  getData: async (key: string = "login_ui_data") => {
+    const data = window.localStorage.getItem(key);
     if (data) {
       return JSON.parse(data);
     }
     return null;
   },
 
-  clear: async () => {
-    window.localStorage.removeItem("login_ui_data");
+  clear: async (key: string = "login_ui_data") => {
+    window.localStorage.removeItem(key);
   },
 };
 

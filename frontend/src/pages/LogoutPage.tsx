@@ -30,7 +30,6 @@ const LogoutPage = () => {
       setIsLoading(false);
       setLogoutSuccess(true);
       Cookies.remove("authToken");
-      Cookies.remove("isLogedIn");
       setMessage({ type: "success", message: "Logout Successful" });
       setTimeout(() => {
         navigate("/");
