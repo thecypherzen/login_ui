@@ -42,7 +42,7 @@ app.use(
       process.env.LIVE_CLIENT_URL as string,
     ],
     credentials: true,
-  }),
+  })
 );
 app.use(cookieParser());
 
@@ -56,7 +56,7 @@ app.post(
     setResHeaders(res);
     next();
   },
-  loginController,
+  loginController
 );
 app.post(
   "/api/v1/auth/logout",
@@ -64,7 +64,7 @@ app.post(
     setResHeaders(res);
     next();
   },
-  logoutController,
+  logoutController
 );
 app.post(
   "/api/v1/auth/signup",
@@ -72,7 +72,7 @@ app.post(
     setResHeaders(res);
     next();
   },
-  signupController,
+  signupController
 );
 
 // 404 handlers
@@ -96,7 +96,7 @@ const keepAlive = () => {
         "Server alive check",
         res.data.message,
         "at",
-        new Date().toLocaleString("en-GB"),
+        new Date().toLocaleString("en-GB")
       );
       console.log(res.data);
     })
@@ -104,8 +104,8 @@ const keepAlive = () => {
       console.log(err?.message ?? "error");
     });
 };
-
-setInterval(keepAlive, 840000);
+const keepAliveInterval = 40 * 60 * 1000; // every 40mins in ms
+setInterval(keepAlive, 2400000);
 
 // server listener
 const server = app.listen(PORT, HOST, () => {
